@@ -51,8 +51,10 @@ public class RBTTester {
        return v.result;
     }
 
+    //THese can be anonymous classes
     public static String makeStringDetails(RedBlackTree t) {
     	{
+    		//this can be an anonymous class in mine
     	       class MyVisitor implements RedBlackTree.Visitor {
     	          String result = "";
     	          public void visit(RedBlackTree.Node n)
@@ -62,6 +64,7 @@ public class RBTTester {
     	             
     	          }
     	       };
+    	       //would define and instantiate the anonymous class here instead of up top
     	       MyVisitor v = new MyVisitor();
     	       t.preOrderVisit(v);
     	       return v.result;
