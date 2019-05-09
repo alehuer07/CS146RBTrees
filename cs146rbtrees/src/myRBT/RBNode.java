@@ -5,7 +5,7 @@ package myRBT;
  *
  */
 public class RBNode <E extends Comparable<E>> {
-	private RedBlackTree<E> rbt;
+	private RedBlackTree<E> redBlackTreeIn;
 	private E data;
 	private RBNode<E> parent;
 	private RBNode<E> leftChild;
@@ -20,11 +20,10 @@ public class RBNode <E extends Comparable<E>> {
 	 */
 	public RBNode(E data, RedBlackTree<E> rbt) {
 		this.data = data;
-		this.leftChild = new RBNode<E>(null, rbt);
-		this.leftChild.setRed(false);
-		this.rightChild = new RBNode<E>(null, rbt);
-		this.leftChild.setRed(false);
-		this.rbt = rbt;
+		this.leftChild = null;
+		this.rightChild = null;
+		this.isRed = true;
+		this.redBlackTreeIn = rbt;
 	}
 
 	/**
@@ -44,9 +43,9 @@ public class RBNode <E extends Comparable<E>> {
 	 * @return - true if node is a leaf
 	 */
 	public boolean isLeaf() {
-		if (this.equals(rbt.getRoot()) && this.leftChild == null && this.rightChild == null)
+		if (this.equals(redBlackTreeIn.getRoot()) && this.leftChild == null && this.rightChild == null)
 			return true;
-		if (this.equals(rbt.getRoot()))
+		if (this.equals(redBlackTreeIn.getRoot()))
 			return false;
 		if (this.leftChild == null && this.rightChild == null) {
 			return true;
@@ -54,18 +53,19 @@ public class RBNode <E extends Comparable<E>> {
 		return false;
 	}
 
+
 	/**
 	 * @return the rbt
 	 */
 	public RedBlackTree<E> getRbt() {
-		return rbt;
+		return redBlackTreeIn;
 	}
 
 	/**
 	 * @param rbt the rbt to set
 	 */
 	public void setRbt(RedBlackTree<E> rbt) {
-		this.rbt = rbt;
+		this.redBlackTreeIn = rbt;
 	}
 
 	/**

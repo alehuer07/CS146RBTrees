@@ -5,14 +5,24 @@ package myRBT;
  * @author alehu
  *
  */
-public class RedBlackTree <E extends Comparable<E>> 
-{
+public class RedBlackTree<E extends Comparable<E>> {
 	private RBNode<E> root;
-	
-	public RedBlackTree()
-	{
+
+	public RedBlackTree() {
 		this.root = null;
 	}
+
+	public static void main(String[] args)
+	{
+		RedBlackTree<Integer> testRBT = new RedBlackTree<>();
+		testRBT.insert(6);
+		testRBT.insert(9);
+		testRBT.insert(1);
+		testRBT.insert(2);
+		testRBT.insert(7);
+		System.out.println("done");
+	}
+	
 	
 	/**
 	 * Checks if a specified node is a leaf
@@ -20,7 +30,7 @@ public class RedBlackTree <E extends Comparable<E>>
 	 * @param n - the node to be checked
 	 * @return - true if the node is a leaf
 	 */
-	public boolean isLeaf(RBNode<String> n) {
+	public boolean isLeaf(RBNode<E> n) {
 		if (n.equals(root) && n.getLeftChild() == null && n.getRightChild() == null)
 			return true;
 		if (n.equals(root))
@@ -59,9 +69,66 @@ public class RedBlackTree <E extends Comparable<E>>
 	 * 
 	 * @param data - data to be added to the tree
 	 */
-	public void addNode(String data) { // this < that <0. this > that >0
-		// fill
+	public void addNode(RBNode<E> cursor, E data) { // this < that <0. this > that >0
+		//if the root is null(RedBlackTree is empty)
+		if(root == null)
+		{
+			RBNode<E> nodeToAdd = new RBNode<E>(data, this); 
+			root = nodeToAdd;	// set the nodeToAdd to the root
+			//setup the nodeToAdd
+			setUpNode(nodeToAdd);
+		}
+		else 
+		{
+			//Base Case
+			//if the cursor is empty(no data/pointing to a dummy node)
+			if (isEmpty(cursor)) 
+			{
+				//get the parent of the cursor and add the node to the parent
+				RBNode<E> parent = cursor.getParent();
+				RBNode<E> nodeToAdd = new RBNode<E>(data, this);
+				if (nodeToAdd.compareTo(parent) < 0) 	//if nodeToAdd is a leftChild
+				{
+					parent.setLeftChild(nodeToAdd);
+				} 
+				else 
+				{
+					parent.setRightChild(nodeToAdd);	//nodeToAdd is a rightChild
+				}
+	
+				nodeToAdd.setParent(parent);	//nodeToAdd's parent is parent(Node)
+				//setup the nodeToAdd
+				setUpNode(nodeToAdd);
+				
+				
+			}
+			//if the data is smaller than the cursor
+			else if (data.compareTo(cursor.getData()) < 0) {
+				cursor = cursor.getLeftChild();		//move the cursor to the left
+				addNode(cursor, data);
+			} 
+			else 
+			{
+				cursor = cursor.getRightChild();	//move the cursor to the right
+				addNode(cursor, data);
+			}
+		}
 
+		
+
+	}
+
+	/**
+	 * Give a specified node, dummy nodes and properly set the child/parent relationship
+	 * @param nodeToSetup - node to setup
+	 */
+	private void setUpNode(RBNode<E> nodeToSetup) {
+		nodeToSetup.setLeftChild(new RBNode<E>(null, this));
+		nodeToSetup.getLeftChild().setRed(false);
+		nodeToSetup.getLeftChild().setParent(nodeToSetup);
+		nodeToSetup.setRightChild(new RBNode<E>(null, this));
+		nodeToSetup.getRightChild().setRed(false);
+		nodeToSetup.getRightChild().setParent(nodeToSetup);
 	}
 
 	/**
@@ -69,8 +136,9 @@ public class RedBlackTree <E extends Comparable<E>>
 	 * 
 	 * @param data - data to insert
 	 */
-	public void insert(String data) {
-		addNode(data);
+	public void insert(E data) {
+		RBNode<E> cursor = root;
+		addNode(cursor, data);
 	}
 
 	/**
@@ -79,7 +147,7 @@ public class RedBlackTree <E extends Comparable<E>>
 	 * @param k - string to be looked up
 	 * @return - the node that contains the specified String
 	 */
-	public RBNode<E> lookup(String k) {
+	public RBNode<E> lookup(E k) {
 		// fill
 		return null;
 	}
@@ -164,13 +232,13 @@ public class RedBlackTree <E extends Comparable<E>>
 	 * @param child  - the child node
 	 * @return - true if the child is a left child
 	 */
-	public boolean isLeftChild(RBNode<String> parent, RBNode<String> child) {
+	public boolean isLeftChild(RBNode<E> parent, RBNode<E> child) {
 		if (child.compareTo(parent) < 0) {// child is less than parent
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Prints out the key for given node
 	 * 
@@ -217,10 +285,5 @@ public class RedBlackTree <E extends Comparable<E>>
 	public void setRoot(RBNode<E> root) {
 		this.root = root;
 	}
-	
-	
-	
-	
-	
 
 }

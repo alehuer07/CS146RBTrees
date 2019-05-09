@@ -1,7 +1,5 @@
 package myRBT;
 
-import cs146S19.huerta.project4.RedBlackTree.Node;
-
 /**
  * @author alehu
  *
