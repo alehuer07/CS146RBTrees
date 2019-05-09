@@ -74,6 +74,7 @@ public class RedBlackTree<E extends Comparable<E>> {
 		if(root == null)
 		{
 			RBNode<E> nodeToAdd = new RBNode<E>(data, this); 
+			nodeToAdd.setRed(false);
 			root = nodeToAdd;	// set the nodeToAdd to the root
 			//setup the nodeToAdd
 			setUpNode(nodeToAdd);
