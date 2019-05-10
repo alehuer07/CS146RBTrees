@@ -11,6 +11,7 @@ public interface Visitor <E extends Comparable<E>>
 	 * 
 	 * @param n - the visited node
 	 */
-	void visit(RBNode<E> n);
+	public void visit(RBNode<E> n);
+
 
 }

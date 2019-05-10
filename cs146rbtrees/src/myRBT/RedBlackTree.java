@@ -20,22 +20,24 @@ public class RedBlackTree<E extends Comparable<E>> {
 		testRBT.insert(1);
 		testRBT.insert(2);
 		testRBT.insert(7);
-		System.out.println("done");
+		RBNode<Integer> node7 = testRBT.search(7);
+		testRBT.printTree();
+		System.out.println("\ndone");
 	}
 	
 	
 	/**
 	 * Checks if a specified node is a leaf
 	 * 
-	 * @param n - the node to be checked
+	 * @param node - the node to be checked
 	 * @return - true if the node is a leaf
 	 */
-	public boolean isLeaf(RBNode<E> n) {
-		if (n.equals(root) && n.getLeftChild() == null && n.getRightChild() == null)
+	public boolean isLeaf(RBNode<E> node) {
+		if (node.equals(root) && node.getLeftChild() == null && node.getRightChild() == null)
 			return true;
-		if (n.equals(root))
+		if (node.equals(root))
 			return false;
-		if (n.getLeftChild() == null && n.getRightChild() == null) {
+		if (node.getLeftChild() == null && node.getRightChild() == null) {
 			return true;
 		}
 		return false;
@@ -55,10 +57,12 @@ public class RedBlackTree<E extends Comparable<E>> {
 	 * @param node - the node to start with
 	 */
 	public void printTree(RBNode<E> node) {
-		System.out.print(node.getData());
+		
 		if (node.isLeaf()) {
 			return;
 		}
+		System.out.print(node.getData() + "");
+		
 		printTree(node.getLeftChild());
 		printTree(node.getRightChild());
 	}
@@ -118,7 +122,16 @@ public class RedBlackTree<E extends Comparable<E>> {
 		
 
 	}
-
+	/**
+	 * Calls addNode to insert a node
+	 * 
+	 * @param data - data to insert
+	 */
+	public void insert(E data) {
+		RBNode<E> cursor = root;
+		addNode(cursor, data);
+	}
+	
 	/**
 	 * Give a specified node, dummy nodes and properly set the child/parent relationship
 	 * @param nodeToSetup - node to setup
@@ -132,47 +145,68 @@ public class RedBlackTree<E extends Comparable<E>> {
 		nodeToSetup.getRightChild().setParent(nodeToSetup);
 	}
 
-	/**
-	 * Calls addNode to insert a node
-	 * 
-	 * @param data - data to insert
-	 */
-	public void insert(E data) {
-		RBNode<E> cursor = root;
-		addNode(cursor, data);
-	}
 
 	/**
 	 * LookUp a node whose data matches the specified String
 	 * 
-	 * @param k - string to be looked up
+	 * @param data - data to be looked up
 	 * @return - the node that contains the specified String
 	 */
-	public RBNode<E> lookup(E k) {
-		// fill
-		return null;
+	public RBNode<E> lookup(RBNode<E> cursor, E data) {
+		
+		if(cursor == null || cursor.getData() == data)
+		{
+			return cursor;
+		}
+		if(cursor.getData() == null)
+		{
+			System.out.println("COULDNT FIND THE NODE");
+			return null;
+		}
+		
+		if(data.compareTo(cursor.getData()) < 0)
+		{
+			return lookup(cursor.getLeftChild(), data);
+		}
+		
+		return lookup(cursor.getRightChild(), data);
+	}
+	
+	/**
+	 * This method calls lookup
+	 * @param data
+	 */
+	public RBNode<E> search(E data){
+		RBNode<E> cursor = root;
+		RBNode<E> foundNode = lookup(cursor, data);
+		return foundNode;
 	}
 
 	/**
 	 * Finds the sibling of a specified node
 	 * 
-	 * @param n - the node to be used to get the sibling
+	 * @param node - the node to be used to get the sibling
 	 * @return - the sibling node
 	 */
-	public RBNode<E> getSibling(RBNode<E> n) {
-		//
-		return null;
+	public RBNode<E> getSibling(RBNode<E> node) {
+		if(isLeftChild(node.getParent(), node))
+		{
+			return node.getParent().getRightChild();
+		}
+		else {
+			return node.getParent().getLeftChild();
+		}
 	}
 
 	/**
 	 * Finds the aunt of a specified node
 	 * 
-	 * @param n - the node to be used to get the aunt
+	 * @param node - the node to be used to get the aunt
 	 * @return - the aunt node
 	 */
-	public RBNode<E> getAunt(RBNode<E> n) {
-		//
-		return null;
+	public RBNode<E> getAunt(RBNode<E> node) {
+		
+		return getSibling(node.getParent());
 	}
 
 	/**
@@ -208,7 +242,7 @@ public class RedBlackTree<E extends Comparable<E>> {
 	 * 
 	 * @param current - the current pointer node
 	 */
-	public void fixTree(RBNode<E> current) {
+	public void fixTree(RBNode<E> currenkt) {
 		//
 	}
 

@@ -11,6 +11,7 @@ public class RBNode <E extends Comparable<E>> {
 	private RBNode<E> leftChild;
 	private RBNode<E> rightChild;
 	private boolean isRed;
+	private int color;	//black == 1, red ==0?
 	
 
 	/**
@@ -24,6 +25,7 @@ public class RBNode <E extends Comparable<E>> {
 		this.rightChild = null;
 		this.isRed = true;
 		this.redBlackTreeIn = rbt;
+		this.color = 0;
 	}
 
 	/**
@@ -136,7 +138,42 @@ public class RBNode <E extends Comparable<E>> {
 	 */
 	public void setRed(boolean isRed) {
 		this.isRed = isRed;
+		if(this.isRed){
+			this.color = 0;
+		}
+		else {
+			this.color = 1;
+		}
 	}
+
+	/**
+	 * @return the redBlackTreeIn
+	 */
+	public RedBlackTree<E> getRedBlackTreeIn() {
+		return redBlackTreeIn;
+	}
+
+	/**
+	 * @param redBlackTreeIn the redBlackTreeIn to set
+	 */
+	public void setRedBlackTreeIn(RedBlackTree<E> redBlackTreeIn) {
+		this.redBlackTreeIn = redBlackTreeIn;
+	}
+
+	/**
+	 * @return the color
+	 */
+	public int getColor() {
+		return color;
+	}
+
+	/**
+	 * @param color the color to set
+	 */
+	public void setColor(int color) {
+		this.color = color;
+	}
+	
 
 
 	
