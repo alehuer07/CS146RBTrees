@@ -47,7 +47,7 @@ class RedBlackTreeTester {
 			public void visit(RBNode<T> n)
 			{
 				if(n.getData() != null)
-				result = result + n.getData();
+					result = result + n.getData();
 			}
 		};
 		MyVisitor<E> visitor = new MyVisitor<E>();
@@ -62,8 +62,7 @@ class RedBlackTreeTester {
 			String result = "";
 			public void visit(RBNode<T> n)
 			{
-				
-				
+
 				if((n.getData() != null))
 				{
 					int color = n.getColor();

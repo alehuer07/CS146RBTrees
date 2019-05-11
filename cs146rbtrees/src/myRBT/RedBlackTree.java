@@ -12,18 +12,18 @@ public class RedBlackTree<E extends Comparable<E>> {
 		this.root = null;
 	}
 
-	public static void main(String[] args)
-	{
-		RedBlackTree<Integer> testRBT = new RedBlackTree<>();
-		testRBT.insert(6);
-		testRBT.insert(9);
-		testRBT.insert(1);
-		testRBT.insert(2);
-		testRBT.insert(7);
-		RBNode<Integer> node7 = testRBT.search(7);
-		testRBT.printTree();
-		System.out.println("\ndone");
-	}
+//	public static void main(String[] args)
+//	{
+//		RedBlackTree<Integer> testRBT = new RedBlackTree<>();
+//		testRBT.insert(6);
+//		testRBT.insert(9);
+//		testRBT.insert(1);
+//		testRBT.insert(2);
+//		testRBT.insert(7);
+//		RBNode<Integer> node7 = testRBT.search(7);
+//		testRBT.printTree();
+//		System.out.println("\ndone");
+//	}
 	
 	
 	/**
@@ -74,14 +74,19 @@ public class RedBlackTree<E extends Comparable<E>> {
 	 * @param data - data to be added to the tree
 	 */
 	public void addNode(RBNode<E> cursor, E data) { // this < that <0. this > that >0
+		RBNode<E> nodeToAdd = new RBNode<E>(null, this) ;
 		//if the root is null(RedBlackTree is empty)
+		
 		if(root == null)
 		{
-			RBNode<E> nodeToAdd = new RBNode<E>(data, this); 
+			nodeToAdd = new RBNode<E>(data, this); 
 			nodeToAdd.setRed(false);
 			root = nodeToAdd;	// set the nodeToAdd to the root
 			//setup the nodeToAdd
 			setUpNode(nodeToAdd);
+			
+			fixTree(nodeToAdd);
+			
 		}
 		else 
 		{
@@ -91,7 +96,7 @@ public class RedBlackTree<E extends Comparable<E>> {
 			{
 				//get the parent of the cursor and add the node to the parent
 				RBNode<E> parent = cursor.getParent();
-				RBNode<E> nodeToAdd = new RBNode<E>(data, this);
+				nodeToAdd = new RBNode<E>(data, this);
 				if (nodeToAdd.compareTo(parent) < 0) 	//if nodeToAdd is a leftChild
 				{
 					parent.setLeftChild(nodeToAdd);
@@ -105,10 +110,13 @@ public class RedBlackTree<E extends Comparable<E>> {
 				//setup the nodeToAdd
 				setUpNode(nodeToAdd);
 				
+				fixTree(nodeToAdd);
+				
 				
 			}
 			//if the data is smaller than the cursor
-			else if (data.compareTo(cursor.getData()) < 0) {
+			else if (data.compareTo(cursor.getData()) < 0) 
+			{
 				cursor = cursor.getLeftChild();		//move the cursor to the left
 				addNode(cursor, data);
 			} 
@@ -225,16 +233,60 @@ public class RedBlackTree<E extends Comparable<E>> {
 	 * @param n - node to rotate left
 	 */
 	public void rotateLeft(RBNode<E> n) {
-		//
+		RBNode<E> y = n.getRightChild();
+		n.setRightChild(y.getLeftChild());
+		
+		if(y.getLeftChild() != null)
+		{
+			y.getLeftChild().setParent(n);
+		}
+		y.setParent(n.getParent());
+		
+		if(n.getParent() == null)
+		{
+			this.root = y;
+		}
+		
+		else if(n == n.getParent().getLeftChild())
+		{
+			n.getParent().setLeftChild(y);
+		}
+		else {
+			n.getParent().setRightChild(y);
+		}
+		y.setLeftChild(n);
+		n.setParent(y);
 	}
 
 	/**
 	 * Rotate right at the specified node
 	 * 
-	 * @param n - node to rotate right
+	 * @param x - node to rotate right
 	 */
-	public void rotateRight(RBNode<E> n) {
-		//
+	public void rotateRight(RBNode<E> x) {
+		RBNode<E> y = x.getLeftChild();
+		x.setLeftChild(y.getRightChild());
+		
+		if(y.getRightChild()!= null)	//might not need this condition
+		{
+			y.getRightChild().setParent(x);
+		}
+		y.setParent(x.getParent());
+		
+		if(x.getParent() == null)
+		{
+			this.root = y;
+		}
+		
+		else if(x == x.getParent().getRightChild())
+		{
+			x.getParent().setRightChild(y);
+		}
+		else {
+			x.getParent().setLeftChild(y);
+		}
+		y.setRightChild(x);
+		x.setParent(y);
 	}
 
 	/**
@@ -242,8 +294,72 @@ public class RedBlackTree<E extends Comparable<E>> {
 	 * 
 	 * @param current - the current pointer node
 	 */
-	public void fixTree(RBNode<E> currenkt) {
-		//
+	public void fixTree(RBNode<E> current) {
+	
+		
+		//if the current is the root node, make it black and quit
+		if(current == root)
+		{
+			current.setRed(false);
+			return;
+		}
+		//if the parent is black, quit
+		if(!current.getParent().isRed())
+		{
+			return;
+		}
+		
+		RBNode<E> parent = current.getParent();
+		RBNode<E> aunt = this.getAunt(current);
+		RBNode<E> grandparent = this.getGrandparent(current);
+		
+		//if the current node is red and the parent is red, the tree is unbalanced
+		if(current.isRed() && parent.isRed())
+		{
+			//if the aunt is red, then re-color and fix again
+			if(aunt.isRed())
+			{
+				parent.setRed(false);
+				aunt.setRed(false);
+				grandparent.setRed(true);
+				fixTree(grandparent);
+			}	
+			//else if the aunt node is empty or black, look at the cases
+			else if(this.isEmpty(aunt) || !aunt.isRed() )
+			{
+				//if grandparent - parent(is left child) - current(is right child)
+				if(this.isLeftChild(grandparent, parent) && !this.isLeftChild(parent, current))
+				{
+					this.rotateLeft(parent);
+					this.fixTree(parent);
+				}
+				//if grandparent - parent(is right child) - current(is left child)
+				if(!this.isLeftChild(grandparent, parent) && this.isLeftChild(parent, current))
+				{
+					this.rotateRight(parent);
+					this.fixTree(parent);
+				}
+				//if grandparent - parent(is left child) - current(is left child)
+				if(this.isLeftChild(grandparent, parent) && this.isLeftChild(parent, current))
+				{
+					parent.setRed(false);
+					grandparent.setRed(true);
+					this.rotateRight(grandparent);
+					//quit
+				}
+				//if grandparent - parent(is right child) - current(is right child)
+				if(!this.isLeftChild(grandparent, parent) && !this.isLeftChild(parent, current))
+				{
+					parent.setRed(false);
+					grandparent.setRed(true);
+					this.rotateLeft(grandparent); // MUST ROTATE LEFT
+					//quit
+				}	
+			}
+		}
+		
+		
+		
 	}
 
 	/**
