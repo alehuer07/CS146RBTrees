@@ -58,10 +58,18 @@ public class RedBlackTree<E extends Comparable<E>> {
 	 */
 	public void printTree(RBNode<E> node) {
 		
+		if(node == null)
+		{
+			return;
+		}
 		if (node.isLeaf()) {
 			return;
 		}
-		System.out.print(node.getData() + "");
+		if(node .getData() != null)
+		{
+			System.out.println(node.getData() + "");
+		}
+		
 		
 		printTree(node.getLeftChild());
 		printTree(node.getRightChild());
@@ -162,15 +170,16 @@ public class RedBlackTree<E extends Comparable<E>> {
 	 */
 	public RBNode<E> lookup(RBNode<E> cursor, E data) {
 		
-		if(cursor == null || cursor.getData() == data)
+		if(cursor.getData() == null)
+		{
+			//System.out.println("COULDNT FIND THE NODE");
+			return null;
+		}
+		if(cursor == null || cursor.getData().equals(data))
 		{
 			return cursor;
 		}
-		if(cursor.getData() == null)
-		{
-			System.out.println("COULDNT FIND THE NODE");
-			return null;
-		}
+		
 		
 		if(data.compareTo(cursor.getData()) < 0)
 		{
