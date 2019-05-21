@@ -1,4 +1,4 @@
-package myRBT;
+package cs146S19.huerta.project4;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,8 +38,8 @@ class RedBlackTreeTester {
 	void testDictionary() {
 		RedBlackTree<String> rbDictionary = new RedBlackTree<String>();
 		RedBlackTree<String> rbWords = new RedBlackTree<String>();
-		File dictionaryFile = new File("C:\\Users\\alehu\\Desktop\\LocalRepos\\CS146RBTrees\\cs146rbtrees\\src\\myRBT\\dictionary.txt");
-		File poemFile = new File("C:\\Users\\alehu\\Desktop\\LocalRepos\\CS146RBTrees\\cs146rbtrees\\src\\myRBT\\sonnet18.txt");
+		File dictionaryFile = new File("C:\\Users\\alehu\\Desktop\\LocalRepos\\CS146RBTrees\\cs146rbtrees\\src\\cs146S19\\huerta\\project4\\dictionary.txt");
+		File poemFile = new File("C:\\Users\\alehu\\Desktop\\LocalRepos\\CS146RBTrees\\cs146rbtrees\\src\\cs146S19\\huerta\\project4\\sonnet18.txt");
 		
 		Long startTime;
 		long endTime;
@@ -83,6 +83,68 @@ class RedBlackTreeTester {
 			
 			System.out.println("The words that are not in the dictionary, but are in the poem");
 			rbWords.printTree();
+			assertEquals("do\n" +
+					"a\n" + 
+					"May\n" + 
+					"By\n" + 
+					"And\n" + 
+					"But\n" + 
+					"I\n" + 
+					"Death\n" + 
+					"Shall\n" + 
+					"Rough\n" + 
+					"Nor\n" + 
+					"Nor\n" + 
+					"Thou\n" + 
+					"Sometime\n" + 
+					"So\n" + 
+					"So\n" + 
+					"When\n" + 
+					"complexion\n" + 
+					"art\n" + 
+					"all\n" + 
+					"a\n" + 
+					"and\n" + 
+					"and\n" + 
+					"brag\n" + 
+					"as\n" + 
+					"can\n" + 
+					"can\n" + 
+					"day\n" + 
+					"course,\n" + 
+					"dimm'd\n" + 
+					"declines,\n" + 
+					"the\n" + 
+					"lease\n" + 
+					"hot\n" + 
+					"his\n" + 
+					"eye\n" + 
+					"grow'st\n" + 
+					"his\n" + 
+					"is\n" + 
+					"in\n" + 
+					"in\n" + 
+					"or\n" + 
+					"of\n" + 
+					"of\n" + 
+					"not\n" + 
+					"nature's\n" + 
+					"men\n" + 
+					"of\n" + 
+					"or\n" + 
+					"summer's\n" + 
+					"ow'st\n" + 
+					"see\n" + 
+					"summer's\n" + 
+					"too\n" + 
+					"thy\n" + 
+					"the\n" + 
+					"to\n" + 
+					"to\n" + 
+					"to\n" + 
+					"untrimm'd\n" + 
+					"too\n" + 
+					"wander'st\n", makeStringln(rbWords));
 				
 		}
 		catch(FileNotFoundException fnf)
@@ -102,7 +164,20 @@ class RedBlackTreeTester {
 	}
 	
 	
-	
+	public <E extends Comparable<E>> String makeStringln(RedBlackTree<E> t) {
+		class MyVisitor<T extends Comparable<T>> implements Visitor<T> {
+			String result = "";
+
+			public void visit(RBNode<T> n) {
+				if (n.getData() != null)
+					result = result + n.getData() +"\n";
+			}
+		}
+		;
+		MyVisitor<E> visitor = new MyVisitor<E>();
+		t.preOrderVisit(visitor);
+		return visitor.result;
+	}
 	
 	// add tester for spell checker
 
